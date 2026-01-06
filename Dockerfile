@@ -1,18 +1,10 @@
-FROM maven:3.9.6-eclipse-temurin-17 AS build
+FROM tomcat:9-jdk8
 
-WORKDIR /app
-COPY backend/PacketWorldAPI ./PacketWorldAPI
-WORKDIR /app/PacketWorldAPI
-
-RUN mvn clean package -DskipTests
-
-# -------------------------
-
-FROM tomcat:9-jdk17
+# Limpia apps por defecto
 RUN rm -rf /usr/local/tomcat/webapps/*
 
-COPY --from=build /app/PacketWorldAPI/target/PacketWorldAPI.war \
-/usr/local/tomcat/webapps/ROOT.war
+# Copia la aplicación web ya construida
+COPY PacketWorldAPI /usr/local/tomcat/webapps/ROOT
 
 EXPOSE 8080
 
